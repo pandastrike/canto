@@ -3,7 +3,7 @@
 Composed operations, data structure ligatures.
 
 
-## Exports
+## Included classes
 
 ### Cache
 
@@ -23,14 +23,15 @@ cache = new Cache
 
 
 
+# storing
+cache.store {value: object, ttl: 5 * 1000}, (error, key) ->
 cache.store {value: object}, (error, key) ->
-
-cache.store {value: object}, (error, key) ->
-
 cache.store object, (error, key) ->
 
+# fetching
 cache.fetch key, (error, value) ->
 
+# removing
 cache.remove key, (error) ->
 
 ```
