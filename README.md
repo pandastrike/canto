@@ -17,6 +17,9 @@ log4js = require "log4js"
 
 cache = new Cache
   log: log4js.getLogger() # optional
+  # Because we need to expire them, items are stored as Redis strings.
+  # To avoid polluting the global keyspace, we always prefix a namespace
+  # to our keys.  The namespace defaults to "cache"
   namespace: "test-cache"
   # Default ttl in milliseconds
   # If not set, then items will only be expired when
