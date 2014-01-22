@@ -2,6 +2,9 @@
 
 Composed operations, data structure ligatures.
 
+## Install
+
+    npm install --save canto
 
 ## Included classes
 
