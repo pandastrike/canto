@@ -15,7 +15,10 @@ log4js = require "log4js"
 cache = new Cache
   log: log4js.getLogger() # optional
   namespace: "test-cache"
-  ttl: 2000 # Default ttl in milliseconds
+  # Default ttl in milliseconds
+  # If not set, then items will only be expired when
+  # store is called with a ttl.
+  ttl: 2000
   redis:
     host: "localhost"
     port: 6379

@@ -10,7 +10,6 @@ cache = new Cache
     warn: ->
 
   namespace: "test-cache"
-  ttl: 2000
   redis:
     host: "localhost"
     port: 6379
@@ -64,7 +63,7 @@ Testify.test "Cache", (context) ->
 
   context.test "JSON round trip", (context) ->
     value = {foo: "bar"}
-    cache.store {value}, (error, key) ->
+    cache.store {value, ttl: 400}, (error, key) ->
       context.fail(error) if error
       cache.fetch key, (error, result) ->
         context.test "correct value returned", ->

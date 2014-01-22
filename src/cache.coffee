@@ -9,7 +9,7 @@ module.exports = class Cache
 
     @log ?= log4js.getLogger("Cache")
     @namespace ?= "cache"
-    @ttl ?= 5 * 60 * 1000
+    @ttl ?= false
 
     @redis = redis.createClient port, host, options
     @redis.on "error", (error) =>
@@ -46,12 +46,15 @@ module.exports = class Cache
         callback error
       else
         @log.debug "Stored - #{key}\n#{options.value}"
-        @redis.pexpire @_namespace(key), options.ttl, (error, result) =>
-          if error
-            callback error
-          else
-            @log.debug "Set ttl for #{key}"
-            callback null, key
+        if !options.ttl
+          callback null, key
+        else
+          @redis.pexpire @_namespace(key), options.ttl, (error, result) =>
+            if error
+              callback error
+            else
+              @log.debug "Set ttl for #{key}"
+              callback null, key
       
   fetch: (key, callback) ->
     if !callback?
