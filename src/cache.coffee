@@ -16,23 +16,19 @@ module.exports = class Cache
       @log.error "Problem with Redis: #{error}"
 
   _namespace: (key) ->
-    "#{@namespace}/#{key}"
+    "#{@namespace}#{key}"
 
-  store: (args...) ->
-    # TODO:  Typely
-    unless args.length == 2 && typeof(args[1]) == "function"
-      @log.warn "'store' called with unusable arguments: #{JSON.stringify(args)}"
+  put: (args...) ->
+    [options, callback] = args
+    unless typeof(options) == "object" && typeof(callback) == "function"
+      @log.warn "'put' called with unusable arguments: #{JSON.stringify(args)}"
       return
 
-    callback = args[1]
-    if typeof(args[0]) == "string"
-      options = {value: args[0], ttl: @ttl}
-    else if args[0].value?
-      options = args[0]
-      options.ttl ?= @ttl
-    else
-      callback new Error "Must supply value property"
+    unless typeof(options.key) == "string" && options.value?
+      callback new Error "Must supply key and value properties"
       return
+
+    options.ttl ?= @ttl
 
     try
       options.value = JSON.stringify(options.value)
@@ -40,25 +36,25 @@ module.exports = class Cache
       callback error
       return
 
-    key = randomKey(16)
-    @redis.set @_namespace(key), options.value, (error, result) =>
+    @redis.set @_namespace(options.key), options.value, (error, result) =>
       if error
         callback error
       else
-        @log.debug "Stored - #{key}\n#{options.value}"
+        @log.debug "Stored - #{options.key}\n#{options.value}"
         if !options.ttl
-          callback null, key
+          callback null
         else
-          @redis.pexpire @_namespace(key), options.ttl, (error, result) =>
+          @redis.pexpire @_namespace(options.key), options.ttl, (error, result) =>
             if error
               callback error
             else
-              @log.debug "Set ttl for #{key}"
-              callback null, key
+              @log.debug "Set ttl for #{options.key}"
+              callback null
       
-  fetch: (key, callback) ->
+
+  get: (key, callback) ->
     if !callback?
-      @log.warn "'fetch' called without a callback"
+      @log.warn "'get' called without a callback"
     else
       @redis.get @_namespace(key), (error, result) =>
         if error
@@ -70,9 +66,9 @@ module.exports = class Cache
           catch error
             callback error
 
-  remove: (key, callback) ->
+  delete: (key, callback) ->
     if !callback?
-      @log.warn "'remove' called without a callback"
+      @log.warn "'delete' called without a callback"
     else
       @redis.del @_namespace(key), (error, result) =>
         if error
