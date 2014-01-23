@@ -19,6 +19,7 @@ module.exports = class Cache
     "#{@namespace}/#{key}"
 
   store: (args...) ->
+    # TODO: record non-expiring keys in an index?
     # TODO:  Typely
     unless args.length == 2 && typeof(args[1]) == "function"
       @log.warn "'store' called with unusable arguments: #{JSON.stringify(args)}"
