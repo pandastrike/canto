@@ -10,7 +10,8 @@
   },
   "main": "./lib/index.js",
   "files": [
-    "lib/"
+    "lib/",
+    "README.md"
   ],
   "scripts": {
     "prepublish": "coffee -o lib/ -c src/*.coffee"
