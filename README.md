@@ -33,9 +33,8 @@ cache = new Cache
 
 
 # storing
-cache.put {value: object, ttl: 5 * 1000}, (error, key) ->
-cache.put {value: object}, (error, key) ->
-cache.put object, (error, key) ->
+cache.put {key: "red", value: object, ttl: 5 * 1000}, (error) ->
+cache.put {key: "blue", value: object}, (error) ->
 
 # retrieving
 cache.get key, (error, value) ->
