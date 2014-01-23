@@ -20,7 +20,7 @@ cache = new Cache
   # Because we need to expire them, items are stored as Redis strings.
   # To avoid polluting the global keyspace, we always prefix a namespace
   # to our keys.  The namespace defaults to "cache"
-  namespace: "test-cache"
+  namespace: "test-cache/"
   # Default ttl in milliseconds
   # If not set, then items will only be expired when
   # put is called with a ttl.
