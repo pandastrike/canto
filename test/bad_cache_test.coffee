@@ -27,25 +27,37 @@ Testify.test "Cache", (context) ->
     cache.put {key: "fruit", value: ["apple", "orange"], ttl: -99}, (error) ->
 
       context.test "Should fail", ->
-        assert.ok error
+        #assert.ok error
+
+        context.test ".get", (context) ->
+          cache.get "fruit", (error, value) ->
+            context.fail(error) if error
+            context.test "deletes the item", ->
+              assert.equal value, null
 
   put_with_zero_ttl  = context.test ".put with zero ttl", (context) ->
 
     cache.put {key: "ants", value: ["black", "fire", "brown"], ttl: 0}, (error) ->
 
       context.test "Should fail", ->
-        assert.ok error
+        #assert.ok error
 
-  # FIXME: setTimeout
-  put_with_zero_ttl.on "done", ->
+        context.test ".get", (context) ->
+          cache.get "ants", (error, value) ->
+            context.fail(error) if error
+            context.test "deletes the item", ->
+              assert.equal value, null
 
-    setTimeout ( ->
-      context.test ".get with zero ttl", (context) ->
-        cache.get "ants", (error, value) ->
-          context.test "Received correct value", ->
-            assert.ifError error
-            assert.deepEqual value, ["black", "fire", "brown"]
-    ), 5000
+#  FIXME: setTimeout
+#  put_with_zero_ttl.on "done", ->
+#
+#    setTimeout ( ->
+#      context.test ".get with zero ttl", (context) ->
+#        cache.get "ants", (error, value) ->
+#          context.test "Received correct value", ->
+#            assert.ifError error
+#            assert.deepEqual value, ["black", "fire", "brown"]
+#    ), 5000
 
   put = context.test ".put", (context) ->
 
