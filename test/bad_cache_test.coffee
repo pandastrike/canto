@@ -22,19 +22,30 @@ round_trip = (context, description, value) ->
 
 Testify.test "Cache", (context) ->
 
-  put_with_negative_ttl  = context.test ".put with negative ttl", (context) ->
+#  put_with_negative_ttl  = context.test ".put with negative ttl", (context) ->
+#
+#    cache.put {key: "fruit", value: ["apple", "orange"], ttl: -99}, (error) ->
+#
+#      context.test "Should fail", ->
+#        assert.ok error
 
-    cache.put {key: "fruit", value: ["apple", "orange"], ttl: -99}, (error) ->
-
-      context.test "Should fail", ->
-        assert.ok error
-
-  put_with_zero_ttl  = context.test ".put with ttl as zero", (context) ->
+  put_with_zero_ttl  = context.test ".put with zero ttl", (context) ->
 
     cache.put {key: "ants", value: ["black", "fire", "brown"], ttl: 0}, (error) ->
 
       context.test "Should fail", ->
-        assert.ok error
+        assert.ifError error
+        #assert.ok error
+
+  put_with_zero_ttl.on "done", ->
+
+    setTimeout ( ->
+      get = context.test ".get with zero ttl", (context) ->
+        cache.get "ants", (error, value) ->
+          context.test "Received correct value", ->
+            assert.ifError error
+            assert.deepEqual value, ["black", "fire", "brown"]
+    ), 5000
 
   put = context.test ".put", (context) ->
 
