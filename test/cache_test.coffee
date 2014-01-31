@@ -32,9 +32,15 @@ Testify.test "Cache", (context) ->
 
   put.on "done", ->
 
+    context.test "get with a miss", (context) ->
+      cache.get "this should not exist", (error, value) ->
+        context.test "Receives null", ->
+          assert.ifError error
+          assert.equal value, null
+
     get = context.test ".get", (context) ->
       cache.get "smurfs", (error, value) ->
-        context.test "Received correct value", ->
+        context.test "Receives correct value", ->
           assert.ifError error
           assert.deepEqual value, ["hefty", "brainy"]
 
