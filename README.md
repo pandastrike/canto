@@ -1,5 +1,7 @@
 # Canto - Value Added Redis
 
+> **Important** This project is deprecated and unsupported.
+
 Composed operations, data structure ligatures.
 
 ## Install
